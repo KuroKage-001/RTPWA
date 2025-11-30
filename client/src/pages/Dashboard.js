@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import OnboardingTutorial from '../components/OnboardingTutorial';
 import './Dashboard.css';
 
 const API_URL = process.env.REACT_APP_API_URL || (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000');
@@ -10,10 +11,17 @@ function Dashboard({ setAuth }) {
   const [tasks, setTasks] = useState([]);
   const [stats, setStats] = useState({ total: 0, pending: 0, completed: 0 });
   const [loading, setLoading] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchTasks();
+    
+    // Check if user is new (no tasks and hasn't seen tutorial)
+    const hasSeenTutorial = localStorage.getItem('hasSeenTutorial');
+    if (!hasSeenTutorial) {
+      setShowOnboarding(true);
+    }
   }, []);
 
   const fetchTasks = async () => {
@@ -45,6 +53,7 @@ function Dashboard({ setAuth }) {
 
   return (
     <div className="dashboard">
+      {showOnboarding && <OnboardingTutorial onComplete={() => setShowOnboarding(false)} />}
       <Navbar setAuth={setAuth} />
       
       <div className="dashboard-content">
