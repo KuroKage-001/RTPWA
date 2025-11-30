@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
 function Navbar({ setAuth }) {
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -12,17 +13,31 @@ function Navbar({ setAuth }) {
     navigate('/login');
   };
 
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <nav className="navbar">
       <div className="navbar-brand">
         <Link to="/dashboard">⚾ Baseball PWA</Link>
       </div>
+
+      <button className="menu-toggle" onClick={toggleMenu}>
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
       
-      <div className="navbar-links">
-        <Link to="/dashboard">Dashboard</Link>
-        <Link to="/tasks">Tasks</Link>
-        <Link to="/profile">Profile</Link>
-        <button onClick={handleLogout} className="btn-logout">
+      <div className={`navbar-links ${isMenuOpen ? 'active' : ''}`}>
+        <Link to="/dashboard" onClick={closeMenu}>Dashboard</Link>
+        <Link to="/tasks" onClick={closeMenu}>Tasks</Link>
+        <Link to="/profile" onClick={closeMenu}>Profile</Link>
+        <button onClick={() => { handleLogout(); closeMenu(); }} className="btn-logout">
           Logout
         </button>
       </div>
