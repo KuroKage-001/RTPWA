@@ -10,6 +10,28 @@
   position: sticky;
   top: 0;
   z-index: 100;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 1rem 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .navbar-links {
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .navbar-links a {
+    font-size: 0.85rem;
+  }
+
+  .btn-logout {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
 }
 
 .navbar-brand a {
