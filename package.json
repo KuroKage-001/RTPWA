@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Baseball-themed Progressive Web App with authentication",
   "scripts": {
+    "start": "node server/server.js",
     "server": "node server/server.js",
     "client": "cd client && npm start",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
