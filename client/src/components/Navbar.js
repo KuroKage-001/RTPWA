@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import InstallPWA from './InstallPWA';
 import './Navbar.css';
 
 function Navbar({ setAuth }) {
@@ -37,6 +38,7 @@ function Navbar({ setAuth }) {
         <Link to="/dashboard" onClick={closeMenu}>Dashboard</Link>
         <Link to="/tasks" onClick={closeMenu}>Tasks</Link>
         <Link to="/profile" onClick={closeMenu}>Profile</Link>
+        <InstallPWA />
         <button onClick={() => { handleLogout(); closeMenu(); }} className="btn-logout">
           Logout
         </button>

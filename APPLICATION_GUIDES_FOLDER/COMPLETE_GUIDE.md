@@ -123,23 +123,28 @@ useSocket(
 
 ### 5. ✅ Progressive Web App (PWA)
 **Features:**
+- **One-click install button** in navbar (NEW!)
 - Installable on desktop and mobile
 - Standalone app mode
 - Custom app icons (192x192, 512x512)
 - Theme colors and splash screen
 - Add to home screen capability
 - Works like a native app
+- Automatic install prompt detection
 
 **Files:**
 - `client/public/manifest.json` - PWA manifest
 - `client/public/icon-192.png` - App icon (192x192)
 - `client/public/icon-512.png` - App icon (512x512)
 - `client/public/index.html` - Manifest link
+- `client/src/components/InstallPWA.js` - Install button component (NEW!)
+- `client/src/components/InstallPWA.css` - Install button styling (NEW!)
 
-**Installation:**
-1. Open app in Chrome/Edge
-2. Click install icon in address bar
-3. Or use browser menu: "Install Baseball PWA"
+**Installation Methods:**
+1. **Click "📥 Install App" button** in navbar (easiest!)
+2. Click install icon in browser address bar
+3. Use browser menu: "Install Baseball PWA"
+4. Mobile: "Add to Home Screen"
 
 ---
 
