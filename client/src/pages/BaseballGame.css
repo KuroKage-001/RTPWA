@@ -601,3 +601,153 @@
     font-size: 0.95rem;
   }
 }
+
+
+/* Game Controls */
+.game-controls {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  z-index: 5;
+}
+
+.pause-btn,
+.quit-btn {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pause-btn:hover,
+.quit-btn:hover {
+  background: #f0f0f0;
+  border-color: #000;
+  transform: translateY(-2px);
+}
+
+.difficulty-indicator {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  border: 2px solid #ddd;
+}
+
+/* Pause Overlay */
+.pause-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: fadeIn 0.3s ease;
+}
+
+.pause-overlay h2 {
+  font-size: 3rem;
+  color: white;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.pause-overlay p {
+  font-size: 1.2rem;
+  color: #e0e0e0;
+}
+
+/* Difficulty Info */
+.difficulty-info {
+  margin-top: 20px;
+  padding: 20px;
+  background: #f5f5f5;
+  border-radius: 12px;
+  border: 2px solid #e0e0e0;
+}
+
+.difficulty-info h4 {
+  font-size: 1.2rem;
+  color: #000;
+  margin-bottom: 15px;
+}
+
+.difficulty-info p {
+  font-size: 0.95rem;
+  color: #333;
+  margin: 8px 0;
+  padding-left: 10px;
+}
+
+.difficulty-info strong {
+  font-weight: 700;
+}
+
+/* Mobile Responsive for New Elements */
+@media (max-width: 768px) {
+  .game-controls {
+    flex-direction: column;
+    gap: 8px;
+    top: 5px;
+  }
+
+  .pause-btn,
+  .quit-btn {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+
+  .difficulty-indicator {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+  }
+
+  .pause-overlay h2 {
+    font-size: 2rem;
+  }
+
+  .pause-overlay p {
+    font-size: 1rem;
+  }
+
+  .difficulty-info {
+    padding: 15px;
+  }
+
+  .difficulty-info h4 {
+    font-size: 1.1rem;
+  }
+
+  .difficulty-info p {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-controls {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .pause-btn,
+  .quit-btn,
+  .difficulty-indicator {
+    font-size: 0.7rem;
+    padding: 5px 10px;
+  }
+}
