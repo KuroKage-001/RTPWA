@@ -105,15 +105,17 @@ function BaseballGame({ setAuth }) {
 
   const togglePause = () => {
     if (isPaused) {
+      // Resume game
       setIsPaused(false);
-      throwBall();
+      throwBall(true); // Resume from paused position
     } else {
+      // Pause game
       setIsPaused(true);
+      pausedPositionRef.current = ballPosition;
       if (gameLoopRef.current) {
         cancelAnimationFrame(gameLoopRef.current);
         gameLoopRef.current = null;
       }
-      pausedPositionRef.current = ballPosition;
     }
   };
 
@@ -123,24 +125,33 @@ function BaseballGame({ setAuth }) {
     }
   };
 
-  const throwBall = () => {
+  const throwBall = (resumeFromPause = false) => {
     // Stop any existing animation
     if (gameLoopRef.current) {
       cancelAnimationFrame(gameLoopRef.current);
       gameLoopRef.current = null;
     }
     
-    setBallPosition(0);
+    if (!resumeFromPause) {
+      setBallPosition(0);
+    }
     setGameState('playing');
     setGameMessage('');
-    animateBall();
+    animateBall(resumeFromPause ? pausedPositionRef.current : 0);
   };
 
-  const animateBall = () => {
-    let position = 0;
+  const animateBall = (startPosition = 0) => {
+    let position = startPosition;
     let animationId = null;
     
     const animate = () => {
+      if (isPaused) {
+        if (animationId) {
+          cancelAnimationFrame(animationId);
+        }
+        return;
+      }
+      
       position += ballSpeed / 10;
       setBallPosition(position);
       
@@ -211,8 +222,8 @@ function BaseballGame({ setAuth }) {
     
     // Continue game after short delay
     setTimeout(() => {
-      if (gameState !== 'gameOver' && !isPaused) {
-        throwBall();
+      if (gameState !== 'gameOver') {
+        throwBall(false); // Start new ball from beginning
       }
     }, 800);
   };
@@ -237,8 +248,8 @@ function BaseballGame({ setAuth }) {
       }, 500);
     } else {
       setTimeout(() => {
-        if (newMissCount < 3 && !isPaused) {
-          throwBall();
+        if (newMissCount < 3) {
+          throwBall(false); // Start new ball from beginning
         }
       }, 1000);
     }

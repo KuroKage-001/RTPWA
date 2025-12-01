@@ -13,9 +13,16 @@ function Tasks({ setAuth }) {
   const [showModal, setShowModal] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({
+    trainingSessions: 0,
+    gamesPlayed: 0,
+    completed: 0,
+    total: 0
+  });
 
   useEffect(() => {
     fetchTasks();
+    fetchStats();
   }, []);
 
   useEffect(() => {
@@ -34,6 +41,18 @@ function Tasks({ setAuth }) {
       console.error('Error fetching tasks:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchStats = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${API_URL}/api/tasks/stats`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setStats(response.data);
+    } catch (error) {
+      console.error('Error fetching stats:', error);
     }
   };
 
@@ -64,6 +83,7 @@ function Tasks({ setAuth }) {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchTasks();
+      fetchStats(); // Refresh stats after deleting
     } catch (error) {
       console.error('Error deleting task:', error);
     }
@@ -72,6 +92,7 @@ function Tasks({ setAuth }) {
   const handleSaveTask = () => {
     setShowModal(false);
     fetchTasks();
+    fetchStats(); // Refresh stats after saving
   };
 
   return (
@@ -84,6 +105,29 @@ function Tasks({ setAuth }) {
           <button className="btn-create" onClick={handleCreateTask}>
             + New Task
           </button>
+        </div>
+
+        <div className="baseball-stats-summary">
+          <div className="stat-box">
+            <div className="stat-icon">🏋️</div>
+            <div className="stat-value">{stats.trainingSessions}</div>
+            <div className="stat-label">Training Sessions</div>
+          </div>
+          <div className="stat-box">
+            <div className="stat-icon">⚾</div>
+            <div className="stat-value">{stats.gamesPlayed}</div>
+            <div className="stat-label">Games Played</div>
+          </div>
+          <div className="stat-box">
+            <div className="stat-icon">✅</div>
+            <div className="stat-value">{stats.completed}</div>
+            <div className="stat-label">Tasks Completed</div>
+          </div>
+          <div className="stat-box">
+            <div className="stat-icon">📊</div>
+            <div className="stat-value">{stats.total}</div>
+            <div className="stat-label">Total Tasks</div>
+          </div>
         </div>
 
         <div className="filter-tabs">

@@ -3,6 +3,34 @@ const db = require('../config/database');
 
 const router = express.Router();
 
+// Get user stats
+router.get('/stats', async (req, res) => {
+  try {
+    const [tasks] = await db.query(
+      'SELECT category, status FROM tasks WHERE user_id = ?',
+      [req.user.id]
+    );
+
+    const completedTasks = tasks.filter(t => t.status === 'completed');
+    
+    const stats = {
+      total: tasks.length,
+      pending: tasks.filter(t => t.status === 'pending').length,
+      inProgress: tasks.filter(t => t.status === 'in_progress').length,
+      completed: completedTasks.length,
+      trainingSessions: completedTasks.filter(t => t.category === 'training').length,
+      gamesPlayed: completedTasks.filter(t => t.category === 'game').length,
+      equipmentChecks: completedTasks.filter(t => t.category === 'equipment').length,
+      teamMeetings: completedTasks.filter(t => t.category === 'team_meeting').length
+    };
+
+    res.json(stats);
+  } catch (error) {
+    console.error('Get stats error:', error);
+    res.status(500).json({ error: 'Failed to fetch stats' });
+  }
+});
+
 // Get all tasks for user
 router.get('/', async (req, res) => {
   try {
