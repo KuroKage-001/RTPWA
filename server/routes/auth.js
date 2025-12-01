@@ -103,15 +103,34 @@ router.get('/google',
 );
 
 router.get('/google/callback',
-  passport.authenticate('google', { failureRedirect: '/login' }),
+  passport.authenticate('google', { 
+    failureRedirect: '/login',
+    session: true 
+  }),
   (req, res) => {
-    const token = jwt.sign(
-      { id: req.user.id, username: req.user.username, email: req.user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: '7d' }
-    );
+    try {
+      if (!req.user) {
+        console.error('❌ No user in request after Google auth');
+        return res.redirect(`${process.env.CLIENT_URL}/login?error=auth_failed`);
+      }
 
-    res.redirect(`${process.env.CLIENT_URL}/auth/callback?token=${token}`);
+      console.log('✅ Google OAuth successful for user:', req.user.email);
+
+      const token = jwt.sign(
+        { id: req.user.id, username: req.user.username, email: req.user.email },
+        process.env.JWT_SECRET,
+        { expiresIn: '7d' }
+      );
+
+      // Redirect to frontend with token
+      const redirectUrl = `${process.env.CLIENT_URL}/auth/callback?token=${token}`;
+      console.log('🔄 Redirecting to:', redirectUrl);
+      
+      res.redirect(redirectUrl);
+    } catch (error) {
+      console.error('❌ Error in Google callback:', error);
+      res.redirect(`${process.env.CLIENT_URL}/login?error=callback_failed`);
+    }
   }
 );
 
