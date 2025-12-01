@@ -34,10 +34,20 @@ function Dashboard({ setAuth }) {
       const tasksData = response.data;
       setTasks(tasksData);
       
+      // Calculate baseball-specific statistics
+      const completedTasks = tasksData.filter(t => t.status === 'completed');
+      const trainingSessions = completedTasks.filter(t => t.category === 'training').length;
+      const gamesPlayed = completedTasks.filter(t => t.category === 'game').length;
+      const tasksCompleted = completedTasks.length;
+      
       setStats({
         total: tasksData.length,
         pending: tasksData.filter(t => t.status === 'pending').length,
-        completed: tasksData.filter(t => t.status === 'completed').length
+        completed: tasksCompleted,
+        trainingSessions: trainingSessions,
+        gamesPlayed: gamesPlayed,
+        equipmentChecks: completedTasks.filter(t => t.category === 'equipment').length,
+        teamMeetings: completedTasks.filter(t => t.category === 'team_meeting').length
       });
     } catch (error) {
       console.error('Error fetching tasks:', error);
@@ -63,27 +73,51 @@ function Dashboard({ setAuth }) {
         </div>
 
         <div className="stats-grid">
-          <div className="stat-card">
-            <div className="stat-icon">📋</div>
+          <div className="stat-card highlight">
+            <div className="stat-icon">🏋️</div>
             <div className="stat-info">
-              <h3>{stats.total}</h3>
-              <p>Total Tasks</p>
+              <h3>{stats.trainingSessions || 0}</h3>
+              <p>Training Sessions</p>
+            </div>
+          </div>
+
+          <div className="stat-card highlight">
+            <div className="stat-icon">⚾</div>
+            <div className="stat-info">
+              <h3>{stats.gamesPlayed || 0}</h3>
+              <p>Games Played</p>
+            </div>
+          </div>
+
+          <div className="stat-card highlight">
+            <div className="stat-icon">✅</div>
+            <div className="stat-info">
+              <h3>{stats.completed || 0}</h3>
+              <p>Tasks Completed</p>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="stat-icon">🧤</div>
+            <div className="stat-info">
+              <h3>{stats.equipmentChecks || 0}</h3>
+              <p>Equipment Checks</p>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="stat-icon">👥</div>
+            <div className="stat-info">
+              <h3>{stats.teamMeetings || 0}</h3>
+              <p>Team Meetings</p>
             </div>
           </div>
 
           <div className="stat-card">
             <div className="stat-icon">⏳</div>
             <div className="stat-info">
-              <h3>{stats.pending}</h3>
-              <p>Pending</p>
-            </div>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-icon">✅</div>
-            <div className="stat-info">
-              <h3>{stats.completed}</h3>
-              <p>Completed</p>
+              <h3>{stats.pending || 0}</h3>
+              <p>Pending Tasks</p>
             </div>
           </div>
         </div>

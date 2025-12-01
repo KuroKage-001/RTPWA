@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Navbar from '../components/Navbar';
 import OnboardingTutorial from '../components/OnboardingTutorial';
 import './Profile.css';
 
+const API_URL = process.env.REACT_APP_API_URL || (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000');
+
 function Profile({ setAuth }) {
   const [user, setUser] = useState(null);
+  const [stats, setStats] = useState({
+    trainingSessions: 0,
+    gamesPlayed: 0,
+    tasksCompleted: 0,
+    equipmentChecks: 0,
+    teamMeetings: 0,
+    totalTasks: 0
+  });
   const [loading, setLoading] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(false);
 
@@ -18,8 +29,10 @@ function Profile({ setAuth }) {
         const parsedUser = JSON.parse(userData);
         console.log('Profile: Parsed user:', parsedUser);
         setUser(parsedUser);
+        fetchUserStats();
       } catch (error) {
         console.error('Profile: Error parsing user data:', error);
+        setLoading(false);
       }
     } else {
       console.log('Profile: No user data found, trying to decode token...');
@@ -35,13 +48,41 @@ function Profile({ setAuth }) {
           console.log('Profile: Decoded user from token:', decodedUser);
           setUser(decodedUser);
           localStorage.setItem('user', JSON.stringify(decodedUser));
+          fetchUserStats();
         } catch (error) {
           console.error('Profile: Error decoding token:', error);
+          setLoading(false);
         }
+      } else {
+        setLoading(false);
       }
     }
-    setLoading(false);
   }, []);
+
+  const fetchUserStats = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${API_URL}/api/tasks`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      const tasks = response.data;
+      const completedTasks = tasks.filter(t => t.status === 'completed');
+      
+      setStats({
+        trainingSessions: completedTasks.filter(t => t.category === 'training').length,
+        gamesPlayed: completedTasks.filter(t => t.category === 'game').length,
+        tasksCompleted: completedTasks.length,
+        equipmentChecks: completedTasks.filter(t => t.category === 'equipment').length,
+        teamMeetings: completedTasks.filter(t => t.category === 'team_meeting').length,
+        totalTasks: tasks.length
+      });
+    } catch (error) {
+      console.error('Error fetching user stats:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -138,21 +179,36 @@ function Profile({ setAuth }) {
           <div className="profile-stats">
             <h2>⚾ Baseball Stats</h2>
             <p>Track your training progress, game performance, and equipment maintenance</p>
-            <div className="stats-placeholder">
-              <div className="stat-item">
+            <div className="stats-grid-profile">
+              <div className="stat-item highlight">
                 <span className="stat-icon">🏋️</span>
+                <span className="stat-number">{stats.trainingSessions}</span>
                 <span className="stat-label">Training Sessions</span>
-                <span className="stat-number">Coming Soon</span>
               </div>
-              <div className="stat-item">
+              <div className="stat-item highlight">
                 <span className="stat-icon">⚾</span>
+                <span className="stat-number">{stats.gamesPlayed}</span>
                 <span className="stat-label">Games Played</span>
-                <span className="stat-number">Coming Soon</span>
+              </div>
+              <div className="stat-item highlight">
+                <span className="stat-icon">✅</span>
+                <span className="stat-number">{stats.tasksCompleted}</span>
+                <span className="stat-label">Tasks Completed</span>
               </div>
               <div className="stat-item">
-                <span className="stat-icon">✅</span>
-                <span className="stat-label">Tasks Completed</span>
-                <span className="stat-number">Coming Soon</span>
+                <span className="stat-icon">🧤</span>
+                <span className="stat-number">{stats.equipmentChecks}</span>
+                <span className="stat-label">Equipment Checks</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-icon">👥</span>
+                <span className="stat-number">{stats.teamMeetings}</span>
+                <span className="stat-label">Team Meetings</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-icon">📋</span>
+                <span className="stat-number">{stats.totalTasks}</span>
+                <span className="stat-label">Total Tasks</span>
               </div>
             </div>
           </div>
