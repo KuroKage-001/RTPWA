@@ -278,3 +278,60 @@
   position: relative;
   z-index: 1;
 }
+
+
+/* Clickable Stats */
+.stat-card.clickable {
+  cursor: pointer;
+  position: relative;
+}
+
+.stat-card.clickable:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6);
+}
+
+.stat-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1.2rem;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.stat-card.clickable:hover .stat-badge {
+  opacity: 1;
+  transform: scale(1.2) rotate(15deg);
+}
+
+.stat-card.clickable::after {
+  content: 'Click to view achievements';
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.7);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+}
+
+.stat-card.highlight.clickable::after {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.stat-card:not(.highlight).clickable::after {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.stat-card.clickable:hover::after {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .stat-card.clickable::after {
+    font-size: 0.65rem;
+  }
+}

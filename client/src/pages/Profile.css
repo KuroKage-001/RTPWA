@@ -480,3 +480,60 @@
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
+
+
+/* Clickable Stats */
+.stat-item.clickable {
+  cursor: pointer;
+  position: relative;
+}
+
+.stat-item.clickable:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+.stat-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 1rem;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.stat-item.clickable:hover .stat-badge {
+  opacity: 1;
+  transform: scale(1.2) rotate(15deg);
+}
+
+.stat-item.clickable::after {
+  content: 'Click for details';
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.6);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+}
+
+.stat-item.highlight.clickable::after {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.stat-item:not(.highlight).clickable::after {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.stat-item.clickable:hover::after {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .stat-item.clickable::after {
+    font-size: 0.6rem;
+  }
+}

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import OnboardingTutorial from '../components/OnboardingTutorial';
+import AchievementsModal from '../components/AchievementsModal';
 import './Dashboard.css';
 
 const API_URL = process.env.REACT_APP_API_URL || (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000');
@@ -12,6 +13,7 @@ function Dashboard({ setAuth }) {
   const [stats, setStats] = useState({ total: 0, pending: 0, completed: 0 });
   const [loading, setLoading] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showAchievements, setShowAchievements] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -73,47 +75,52 @@ function Dashboard({ setAuth }) {
         </div>
 
         <div className="stats-grid">
-          <div className="stat-card highlight">
+          <div className="stat-card highlight clickable" onClick={() => setShowAchievements(true)} title="Click to view achievements">
             <div className="stat-icon">🏋️</div>
             <div className="stat-info">
               <h3>{stats.trainingSessions || 0}</h3>
               <p>Training Sessions</p>
             </div>
+            <div className="stat-badge">🏆</div>
           </div>
 
-          <div className="stat-card highlight">
+          <div className="stat-card highlight clickable" onClick={() => setShowAchievements(true)} title="Click to view achievements">
             <div className="stat-icon">⚾</div>
             <div className="stat-info">
               <h3>{stats.gamesPlayed || 0}</h3>
               <p>Games Played</p>
             </div>
+            <div className="stat-badge">🏆</div>
           </div>
 
-          <div className="stat-card highlight">
+          <div className="stat-card highlight clickable" onClick={() => setShowAchievements(true)} title="Click to view achievements">
             <div className="stat-icon">✅</div>
             <div className="stat-info">
               <h3>{stats.completed || 0}</h3>
               <p>Tasks Completed</p>
             </div>
+            <div className="stat-badge">🏆</div>
           </div>
 
-          <div className="stat-card">
+          <div className="stat-card clickable" onClick={() => setShowAchievements(true)} title="Click to view achievements">
             <div className="stat-icon">🧤</div>
             <div className="stat-info">
               <h3>{stats.equipmentChecks || 0}</h3>
               <p>Equipment Checks</p>
             </div>
+            <div className="stat-badge">🏆</div>
           </div>
 
-          <div className="stat-card">
+          <div className="stat-card clickable" onClick={() => setShowAchievements(true)} title="Click to view achievements">
             <div className="stat-icon">👥</div>
             <div className="stat-info">
               <h3>{stats.teamMeetings || 0}</h3>
               <p>Team Meetings</p>
             </div>
+            <div className="stat-badge">🏆</div>
           </div>
 
-          <div className="stat-card">
+          <div className="stat-card" onClick={() => navigate('/tasks')} title="Click to view tasks">
             <div className="stat-icon">⏳</div>
             <div className="stat-info">
               <h3>{stats.pending || 0}</h3>
@@ -153,6 +160,9 @@ function Dashboard({ setAuth }) {
           View All Tasks
         </button>
       </div>
+
+      {showOnboarding && <OnboardingTutorial onComplete={() => setShowOnboarding(false)} />}
+      {showAchievements && <AchievementsModal isOpen={showAchievements} onClose={() => setShowAchievements(false)} stats={stats} />}
     </div>
   );
 }

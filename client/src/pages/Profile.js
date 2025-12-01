@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import OnboardingTutorial from '../components/OnboardingTutorial';
+import AchievementsModal from '../components/AchievementsModal';
 import './Profile.css';
 
 const API_URL = process.env.REACT_APP_API_URL || (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000');
@@ -18,6 +19,7 @@ function Profile({ setAuth }) {
   });
   const [loading, setLoading] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showAchievements, setShowAchievements] = useState(false);
 
   useEffect(() => {
     console.log('Profile: Checking localStorage...');
@@ -180,35 +182,41 @@ function Profile({ setAuth }) {
             <h2>⚾ Baseball Stats</h2>
             <p>Track your training progress, game performance, and equipment maintenance</p>
             <div className="stats-grid-profile">
-              <div className="stat-item highlight">
+              <div className="stat-item highlight clickable" onClick={() => setShowAchievements(true)} title="Click to view achievements">
                 <span className="stat-icon">🏋️</span>
                 <span className="stat-number">{stats.trainingSessions}</span>
                 <span className="stat-label">Training Sessions</span>
+                <span className="stat-badge">🏆</span>
               </div>
-              <div className="stat-item highlight">
+              <div className="stat-item highlight clickable" onClick={() => setShowAchievements(true)} title="Click to view achievements">
                 <span className="stat-icon">⚾</span>
                 <span className="stat-number">{stats.gamesPlayed}</span>
                 <span className="stat-label">Games Played</span>
+                <span className="stat-badge">🏆</span>
               </div>
-              <div className="stat-item highlight">
+              <div className="stat-item highlight clickable" onClick={() => setShowAchievements(true)} title="Click to view achievements">
                 <span className="stat-icon">✅</span>
                 <span className="stat-number">{stats.tasksCompleted}</span>
                 <span className="stat-label">Tasks Completed</span>
+                <span className="stat-badge">🏆</span>
               </div>
-              <div className="stat-item">
+              <div className="stat-item clickable" onClick={() => setShowAchievements(true)} title="Click to view achievements">
                 <span className="stat-icon">🧤</span>
                 <span className="stat-number">{stats.equipmentChecks}</span>
                 <span className="stat-label">Equipment Checks</span>
+                <span className="stat-badge">🏆</span>
               </div>
-              <div className="stat-item">
+              <div className="stat-item clickable" onClick={() => setShowAchievements(true)} title="Click to view achievements">
                 <span className="stat-icon">👥</span>
                 <span className="stat-number">{stats.teamMeetings}</span>
                 <span className="stat-label">Team Meetings</span>
+                <span className="stat-badge">🏆</span>
               </div>
-              <div className="stat-item">
+              <div className="stat-item clickable" onClick={() => setShowAchievements(true)} title="Click to view achievements">
                 <span className="stat-icon">📋</span>
                 <span className="stat-number">{stats.totalTasks}</span>
                 <span className="stat-label">Total Tasks</span>
+                <span className="stat-badge">🏆</span>
               </div>
             </div>
           </div>
@@ -228,6 +236,7 @@ function Profile({ setAuth }) {
       </div>
 
       {showOnboarding && <OnboardingTutorial onComplete={() => setShowOnboarding(false)} />}
+      {showAchievements && <AchievementsModal isOpen={showAchievements} onClose={() => setShowAchievements(false)} stats={stats} />}
     </div>
   );
 }

@@ -37,6 +37,7 @@ function Navbar({ setAuth }) {
       <div className={`navbar-links ${isMenuOpen ? 'active' : ''}`}>
         <Link to="/dashboard" onClick={closeMenu}>Dashboard</Link>
         <Link to="/tasks" onClick={closeMenu}>Tasks</Link>
+        <Link to="/game" onClick={closeMenu}>⚾ Play Game</Link>
         <Link to="/profile" onClick={closeMenu}>Profile</Link>
         <InstallPWA />
         <button onClick={() => { handleLogout(); closeMenu(); }} className="btn-logout">
